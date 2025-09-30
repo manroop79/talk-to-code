@@ -24,14 +24,13 @@
 - [Accessibility & Performance](#accessibility--performance)
 - [Testing](#testing)
 - [Security Notes](#security-notes)
-- [Contributing](#contributing)
 
 ---
 
 ## Overview
 
 **EchoCode** (also known as *TalkToCode*) lets you upload a ZIP of your project and interact with it:  
-Ask questions like “What does `main.cpp` do?” or “Where do we validate login?”  
+Ask questions like “What does `navbar.jsx` do?” or “Where do we validate login?”  
 EchoCode extracts and embeds your files, stores embeddings as vectors in Supabase, and uses a lightweight RAG pipeline to deliver fast, readable, source-linked answers. The UI is responsive, minimal, and keyboard-friendly.
 
 ---
@@ -54,8 +53,6 @@ EchoCode extracts and embeds your files, stores embeddings as vectors in Supabas
 - ⚡ **Streaming Replies:** Markdown answers, code highlighting, fast response.
 - 🗂️ **Multiple Projects:** Switch between uploads; recent history.
 - 🧩 **Clean UI:** Hero/Features/Pricing landing; modern workspace.
-- 🧠 **Model Options:** Default GPT-3.5; simply swap to 4o-mini/others.
-- 🧹 **Your Data Stays Yours:** Vectors live in your Supabase.
 
 ---
 
@@ -87,6 +84,65 @@ EchoCode extracts and embeds your files, stores embeddings as vectors in Supabas
   - Workspace: `FileUpload`, `ChatPanel` (Enter to send, Shift+Enter for newline), `Sidebar`
   - Custom Hooks: `useOutsideClick` for modals/overlays
 
-```txt
-Client UI → Next.js API Routes → Supabase pgvector
-            ↘ OpenAI Embeddings/Chat (RAG)
+---
+
+## Core Flows
+
+### 1) Upload → Embed
+- User uploads a ZIP in Workspace
+- `/api/upload` unzips contents
+- `/api/embed` walks files, chunks text, generates embeddings, upserts into Supabase
+
+### 2) Ask a Question
+- `/api/ask` embeds the question
+- ANN search finds most relevant chunks in Supabase
+- Sends context to OpenAI Chat model
+- Streams Markdown answer with citations to UI
+
+### 3) Multiple Projects
+- Each session/project scoped with `project_id` in local storage
+- Switch & maintain uploads, Q&A per project
+
+---
+
+## API Reference
+
+_All routes live in `/app/api`, JSON unless specified._
+
+### `POST /api/upload`
+- Accepts ZIP file
+- Unzips contents under `/uploaded`
+
+### `POST /api/embed`
+- Chunks, embeds, and upserts code into Supabase
+- Reads files, creates embeddings, upserts rows under project
+
+### `POST /api/ask`
+- Embeds question and streams Markdown answer with citations
+- Uses OpenAI + Supabase ANN search
+
+---
+
+## Accessibility & Performance
+
+- Semantic HTML for workspace components
+- Keyboard navigation: Enter/Shift+Enter, visible focus ring
+- Semantic buttons for actions (Upload, Send, etc.)
+- Fully responsive layout for desktop/mobile
+- Animations respect "prefers-reduced-motion"
+- Streaming answers for fast feedback
+
+---
+
+## Testing
+
+- **API:** Smoke tests (basic GET/POST, optional)
+- **UI:** React Testing Library for FileUpload, ChatPanel (optional)
+
+---
+
+## Security Notes
+
+- All embeddings and projects reside in your Supabase; EchoCode never stores/extracts code externally
+- Protect API keys and credentials—store only in environment variables
+- Validate and sanitize file uploads, limit file sizes/types
