@@ -86,6 +86,35 @@ EchoCode extracts and embeds your files, stores embeddings as vectors in Supabas
 
 ---
 
+## Getting Started
+
+### 1) Prerequisites
+
+- Node.js 18+
+- pnpm / npm / yarn
+- Supabase project with **pgvector** enabled
+- OpenAI API key
+
+### 2) Install Dependencies
+
+```bash
+pnpm install
+# or npm install / yarn
+```
+
+### 3) Environment Setup
+
+- Create a `.env.local` file in your project root.
+- Add the following keys to `.env.local`:
+
+  ```env
+  OPENAI_API_KEY=sk-...
+  SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+  SUPABASE_ANON_KEY=YOUR_ANON_KEY
+  ```
+
+---
+
 ## Core Flows
 
 ### 1) Upload → Embed
