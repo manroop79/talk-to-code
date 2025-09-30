@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EchoCode — Talk to Your Codebase
 
-## Getting Started
+> Upload your codebase as a ZIP file and ask questions in plain English—EchoCode indexes your project with embeddings stored in **your** Supabase instance, then answers with clear, source-linked replies. Built with **Next.js 15, TypeScript, Tailwind CSS, Framer Motion, Supabase (pgvector),** and **OpenAI**.
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-15-black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
+![Tailwind](https://img.shields.io/badge/TailwindCSS-3-38B2AC)
+![Framer Motion](https://img.shields.io/badge/Framer%20Motion-animations-ff55cc)
+![Supabase](https://img.shields.io/badge/Supabase-pgvector-3FCF8E)
+![OpenAI](https://img.shields.io/badge/OpenAI-API-412991)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Table of Contents
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- [Overview](#overview)
+- [Screenshots](#screenshots)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [System Architecture](#system-architecture)
+- [Getting Started](#getting-started)
+- [Core Flows](#core-flows)
+- [API Reference](#api-reference)
+- [Accessibility & Performance](#accessibility--performance)
+- [Testing](#testing)
+- [Security Notes](#security-notes)
+- [Contributing](#contributing)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Overview
 
-To learn more about Next.js, take a look at the following resources:
+**EchoCode** (also known as *TalkToCode*) lets you upload a ZIP of your project and interact with it:  
+Ask questions like “What does `main.cpp` do?” or “Where do we validate login?”  
+EchoCode extracts and embeds your files, stores embeddings as vectors in Supabase, and uses a lightweight RAG pipeline to deliver fast, readable, source-linked answers. The UI is responsive, minimal, and keyboard-friendly.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Screenshots
 
-## Deploy on Vercel
+> Replace these with your own project images in `public/readme/`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+![Landing](./public/readme/landing.png)
+![Workspace](./public/readme/workspace.png)
+![Features + Pricing](./public/readme/features-pricing.png)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Features
+
+- 📦 **Upload & Index:** Drag-and-drop ZIP file; chunk and embed files into `pgvector`.
+- 💬 **Ask Anything:** Natural language Q&A over your codebase.
+- 🔗 **Citations:** Clickable sources back to files/lines.
+- ⚡ **Streaming Replies:** Markdown answers, code highlighting, fast response.
+- 🗂️ **Multiple Projects:** Switch between uploads; recent history.
+- 🧩 **Clean UI:** Hero/Features/Pricing landing; modern workspace.
+- 🧠 **Model Options:** Default GPT-3.5; simply swap to 4o-mini/others.
+- 🧹 **Your Data Stays Yours:** Vectors live in your Supabase.
+
+---
+
+## Tech Stack
+
+- **Frontend:** Next.js 15 (App Router), React 18, TypeScript, Tailwind CSS, Framer Motion, Tabler Icons
+- **Backend:** Next.js Route Handlers (`/app/api/*`)
+- **Data:** Supabase Postgres + **pgvector** (`vector(1536)`)
+- **AI:** OpenAI Embeddings (`text-embedding-3-small`), Chat (`gpt-3.5-turbo` default)
+
+---
+
+## System Architecture
+
+- **Client (Next.js app):**  
+  Renders pages/components, triggers uploads, asks questions.
+
+- **API Routes:**  
+  - `/api/upload` — accepts ZIP, unzips to `/uploaded`
+  - `/api/embed` — reads files, chunks & embeds using OpenAI, stores to Supabase
+  - `/api/ask` — embeds questions, does ANN search in Supabase, streams answer
+
+- **Supabase:**  
+  - Postgres + `pgvector` for document/project storage
+  - RPC for semantic search
+
+- **App Structure:**  
+  - UI: `Navbar`, `Hero`, `Features`, `Pricing`, `Workspace`
+  - Workspace: `FileUpload`, `ChatPanel` (Enter to send, Shift+Enter for newline), `Sidebar`
+  - Custom Hooks: `useOutsideClick` for modals/overlays
+
+```txt
+Client UI → Next.js API Routes → Supabase pgvector
+            ↘ OpenAI Embeddings/Chat (RAG)
