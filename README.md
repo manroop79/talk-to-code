@@ -137,7 +137,6 @@ _All routes live in `/app/api`, JSON unless specified._
 ## Testing
 
 - **API:** Smoke tests (basic GET/POST, optional)
-- **UI:** React Testing Library for FileUpload, ChatPanel (optional)
 
 ---
 
