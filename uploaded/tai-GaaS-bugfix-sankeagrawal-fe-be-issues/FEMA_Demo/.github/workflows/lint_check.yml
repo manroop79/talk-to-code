@@ -1,0 +1,36 @@
+name: Lint Check
+on:
+  pull_request:
+
+jobs:
+  lint-check:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: |
+          pip install -r .github/default/lint_check/requirements.txt
+      - name: Initialize Annotation Environment
+        run: |
+          echo "::add-matcher::.github/default/lint_check/annotation.json"
+      - name: Run Flake8
+        run: |
+          flake8 --toml-config=.github/default/lint_check/config.toml .
+      - name: Run Pylint
+        if: always()
+        run: |
+          pylint --rcfile=.github/default/lint_check/config.toml src
+      - name: Run Pylint on extra code
+        if: always()
+        run: |
+          find . -type f -name "*.py" ! -path "./src/*" -print0 | xargs -0 pylint --rcfile=.github/default/lint_check/config.toml
+
+
+

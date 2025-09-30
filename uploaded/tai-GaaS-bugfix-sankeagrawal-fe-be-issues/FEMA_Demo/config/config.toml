@@ -1,0 +1,38 @@
+[IMAGES]
+    HEADER_IMAGE = "./imgs/fema1.png" # Image appears on the left above the tab options. This image is alse used as the icon in the browser thumbnail.
+    BRAND_IMAGE = "./imgs/fema.png" # Main image that appears once the application is started.
+
+[TEXT]
+    DEMO_TITLE = "Public Assistance Program and Policy Guide Support Assistant"
+    DEMO_TAGLINE = "Generative AI-powered solution which assists in document retrieval, summarization, and general asks."
+
+[PAGES.HOME]
+    PATH = "src/genai_app.py"
+    NAME = "Home"
+    SIDEBAR_LABEL = "Home"
+
+[PAGES.DOC_SEARCH]
+    PATH = "src/pages/doc_search_and_summary.py"
+    NAME = "Document Search & Summarization"
+    SIDEBAR_LABEL = "Document Search & Summarization"
+    BUTTON_LABEL = "Doc Search"
+    BUTTON_DESCRIPTION = "Search for the Relevant Documents from the Database and Provide Summary of the Relevant Documents"
+
+    TITLE_ABOVE_TEXT_BOX = "Public Assistance Program and Policy Guide Support Assistant"  # The title above the text box
+    SUB_TITLE_ABOVE_TEXT_BOX1 = "I can assist you in providing insights on, and questions about, in-house documents."  # The subtitle above the text box
+    SUB_TITLE_ABOVE_TEXT_BOX2 = "**Enter your question to Virtual Assistant:**"  # The subtitle above the text box
+    WAITING_NOTIFICATION = "Please Wait, I am searching for the document based on your query."  # The waiting notification message
+
+    TEMPERATURE = 0.0
+    MAX_TOKEN = 2000
+    DATA_SOURCE = "./data/doc_search"
+    SCORE_THRESHOLD = 0.60
+
+[PAGES.DOC_SEARCH.INSTRUCTION_MAPPING]
+    "Short (In Paragraph)" = "provide the very short summary of the provided above text in two to three small paragraphs and summary response should be in accordance with the below question"
+    "Long (In Paragraph)" = "provide the detailed summary of the provided above text in three to four detailed paragraphs and summary response should be in accordance with the below question"
+    "Short (In Bullet Points)" = "provide the summary of the provided above text in 2 bullet points and summary response should be in accordance with the below question"
+    "Long (In Bullet Points)" = "provide the summary of the provided above text in 6 bullet points and summary response should be in accordance with the below question"
+    "User-Determined" = "There are no relevant documents. So say that the user query is out of context"
+
+

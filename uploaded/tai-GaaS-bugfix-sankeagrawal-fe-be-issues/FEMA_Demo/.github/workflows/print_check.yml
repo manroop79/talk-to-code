@@ -1,0 +1,13 @@
+name: Check for print statements
+on: 
+  pull_request:
+jobs:
+  check-print-statements:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.8.3'
+          architecture: 'x64'
+      - run: python .github/default/print_check/check_prints.py .

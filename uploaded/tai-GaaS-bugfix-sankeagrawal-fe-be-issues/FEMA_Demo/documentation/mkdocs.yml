@@ -1,0 +1,17 @@
+site_name: SFL Automatic Documentation
+theme:
+  name: readthedocs
+
+plugins:
+- search
+- gen-files:
+    scripts:
+      - gen_doc_stubs.py
+
+- mkdocstrings:
+    custom_templates: templates
+    default_handler: python
+    enable_inventory: true
+    handlers:
+      python:
+        paths: [src]

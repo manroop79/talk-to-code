@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: fema
+  name: fema-trustworthy-%%VERSION%%
+  labels:
+    app: fema-trustworthy-%%VERSION%%
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fema-trustworthy-%%VERSION%%
+  template:
+    metadata:
+      labels:
+        app: fema-trustworthy-%%VERSION%%
+    spec:
+      automountServiceAccountToken: true
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+      containers:
+        - name: fema-trustworthy
+          image: 225665832482.dkr.ecr.us-east-1.amazonaws.com/fema/trustworthy:%%TAG%%
+          imagePullPolicy: Always
+          command: ["streamlit"]
+          args: ["run", "src/genai_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+          resources:
+            requests:
+              memory: "29Gi"
+              cpu: "7"
+              nvidia.com/gpu: 0
+            limits:
+              memory: "29Gi"
+              cpu: "7"
+              nvidia.com/gpu: 0
+      nodeSelector:
+        app: fema
+      tolerations:
+          - key: fema
+            operator: Equal
+            value: "true"
+            effect: NoSchedule
+---
+apiVersion: v1
+kind: Service
+metadata:
+    labels:
+      app: fema-trustworthy-%%VERSION%%
+    name: fema-trustworthy-%%VERSION%%
+    namespace: fema
+spec:
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8501
+    selector:
+      app: fema-trustworthy-%%VERSION%%
+    type: LoadBalancer

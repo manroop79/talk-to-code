@@ -1,0 +1,6 @@
+FROM python:3.9.16-slim
+ADD default .github/default
+RUN pip install -r .github/default/lint_check/requirements.txt
+RUN pip install -r .github/default/code_similarity/requirements.txt
+WORKDIR /app
+ENTRYPOINT ["bash", "scripts/local_action.sh"]

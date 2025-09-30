@@ -1,0 +1,10 @@
+name: Python TODO Check
+on: 
+  pull_request:
+jobs:
+  python_todo_check:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Find todos in python code
+      run: bash .github/default/py_todo_check/check_py_todos.sh

@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: tai-gps
+  name: tai-api-trustworthy-%%VERSION%%
+  labels:
+    app: tai-api-trustworthy-%%VERSION%%
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tai-api-trustworthy-%%VERSION%%
+  template:
+    metadata:
+      labels:
+        app: tai-api-trustworthy-%%VERSION%%
+    spec:
+      automountServiceAccountToken: true
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+      containers:
+        - name: tai-api-trustworthy
+          image: 225665832482.dkr.ecr.us-east-1.amazonaws.com/fema/trustworthy:%%TAG%%
+          imagePullPolicy: Always
+          command: ["uvicorn"]
+          args: ["app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+          resources:
+            requests:
+              memory: "15Gi"
+              cpu: "2"
+              nvidia.com/gpu: 0
+            limits:
+              memory: "32Gi"
+              cpu: "4"
+              nvidia.com/gpu: 0
+      nodeSelector:
+        app: llm-guard-ng
+      tolerations:
+          - key: llm-guard-ng
+            operator: Equal
+            value: "true"
+            effect: NoSchedule
+---
+apiVersion: v1
+kind: Service
+metadata:
+    labels:
+      app: tai-api-trustworthy-%%VERSION%%
+    name: tai-api-trustworthy-%%VERSION%%
+    namespace: tai-gps
+spec:
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      app: tai-api-trustworthy-%%VERSION%%
+    type: LoadBalancer

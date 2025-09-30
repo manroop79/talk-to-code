@@ -1,0 +1,1 @@
+jupyter lab --port $PORT --allow-root --ip 0.0.0.0

@@ -1,0 +1,22 @@
+name: Check Similar Code
+on:
+  workflow_dispatch:
+
+jobs:
+  code-similarity-check:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: |
+          pip install -r .github/default/code_similarity/requirements.txt
+      - name: Check Duplicate code
+        run: |
+          python .github/default/code_similarity/code_similarity.py src --th 80

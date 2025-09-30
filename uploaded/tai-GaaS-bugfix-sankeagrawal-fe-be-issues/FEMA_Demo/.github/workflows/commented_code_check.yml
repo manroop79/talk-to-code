@@ -1,0 +1,10 @@
+name: Commented Code Check
+on: 
+  pull_request:
+jobs:
+  commented_python_check:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Commented out code status check
+      run: bash .github/default/commented_code_check/check_commented_code.sh

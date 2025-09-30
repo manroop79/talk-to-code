@@ -1,0 +1,13 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<!-- Bubble -->
+<path fill="#10B981" d="M16 6h32c5.523 0 10 4.477 10 10v20c0 5.523-4.477 10-10 10H27.5L16 58v-8H16C10.477 50 6 45.523 6 40V16C6 10.477 10.477 6 16 6Z"/>
+
+<!-- Bars + dots grouped and shifted to center -->
+<g transform="translate(0,-4)"> <!-- adjust Y by +2 -->
+<rect x="29" y="18" width="6" height="28" rx="3" fill="#062E28"/>
+<rect x="21.5" y="23" width="5" height="18" rx="2.5" fill="#062E28"/>
+<rect x="38.5" y="23" width="5" height="18" rx="2.5" fill="#062E28"/>
+<circle cx="18" cy="32" r="2" fill="#062E28"/>
+<circle cx="46" cy="32" r="2" fill="#062E28"/>
+</g>
+</svg>

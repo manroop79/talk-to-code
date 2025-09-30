@@ -1,0 +1,12 @@
+name: Markdown TODO Check
+on: 
+  pull_request:
+    paths:
+      - '**README.md'
+jobs:
+  markdown_todo_check:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Find todos in markdown files
+      run: bash .github/default/md_todo_check/check_md_todos.sh

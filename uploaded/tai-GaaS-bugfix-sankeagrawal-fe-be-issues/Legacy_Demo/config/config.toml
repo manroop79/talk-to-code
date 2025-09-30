@@ -1,0 +1,299 @@
+[IMAGES]
+HEADER_IMAGE = "./imgs/deloitte_dot_logo.png" # Main image that appears once the application is started.
+BRAND_IMAGE = "./imgs/deloitte_dot_small.png"  # Small Image that appears on the left above the tab options.
+ICON_IMAGE = "./imgs/deloitte_dot_small.png" # Favicon image that appears on the browser thumbnail.
+
+[TEXT]
+
+DEMO_TITLE = "GenAI Demo"
+DEMO_TAGLINE = "Generative AI powered solution which assists in providing insights on in-house data, existing images, and general asks."
+CLIENT_NAME = "Deloitte"
+
+[SUBSET]
+# These must be the keys (as defined in this config) for each page
+SELECTION = ["HOME", "TRUSTWORTHY_QA"]
+
+[PAGES.HOME]
+PATH = "src/genai_app.py"
+NAME = "Home"
+SIDEBAR_LABEL = "Home"
+
+[PAGES.REPORT_GENERATION]
+PATH = "src/pages/report_generation.py"
+NAME = "Report Generation"
+SIDEBAR_LABEL = "Report Generation"
+BUTTON_LABEL = "Report Generation"
+BUTTON_DESCRIPTION = "Generates a Bespoke Report with Figures and Analysis"
+
+DATA_SOURCE = "./data/report_gen"
+CSV_FILE_NAME = "SampleData.csv"
+TEMPLATE_NAME = "SampleReportTemplate.docx"
+OUTPUT_DOCUMENT_NAME = "Sample_Report_v2"
+
+TITLE_ABOVE_CHECKBOXES = "Automated Report Generation"
+SUB_TITLE_ABOVE_CHECKBOXES = 'Check the box corresponding to the category of interest and click "Generate Report" to start generation'
+
+OPENAIMODEL = "gpt-4-32k" #a list of up-to-date openai models can be found here: https://platform.openai.com/docs/models/gpt-4
+TEMPERATURE = 0
+MAX_TOKEN = 2000
+ERROR_RESPONSE = "I am unable to generate content for this section of the report -- apologies for the inconvenience."
+
+#The starting month and starting year are for the data analysis portion of the report generation.
+# These are used by src/report_dataframe.py which is a configurable file depending on data pre-processing needs.
+STARTING_MONTH = 9 # The integer value for the month of the year to start the one year analysis (January = 1)
+STARTING_YEAR = 2021
+
+ABBREVIATE_NAMES_PROMPT = '''Shorten the text to show on a chart, Abbrevate words where necessary,
+                    Split output into multiple lines - restrict to 3 words per line. '''
+
+[PAGES.REPORT_GENERATION.HEADER]
+FONT_NAME = "Univers Condensed"
+FONT_SIZE = 14
+LEFT_INDENT = 0
+COLOR = [0, 54, 96]
+
+[PAGES.REPORT_GENERATION.PARAGRAPH]
+LINE_SPACING = 1
+SPACE_AFTER = 0
+FONT_NAME = "Univers Condensed"
+FONT_SIZE = 12
+COLOR = [0, 54, 96]
+
+[PAGES.REPORT_GENERATION.FIGURES]
+WIDTH = 7
+HEIGHT = 4.5
+
+[PAGES.REPORT_GENERATION.CATEGORY_MAP]
+
+[[PAGES.REPORT_GENERATION.CATEGORY_MAP."Construction"]]
+heading = ""
+dataframe_cols = ["Units Built"]
+plot_type = "line"
+
+[[PAGES.REPORT_GENERATION.CATEGORY_MAP."Distribution"]]
+heading = "Interruptions"
+dataframe_cols = ["Unit X Distribution"]
+plot_type = "line"
+
+[[PAGES.REPORT_GENERATION.CATEGORY_MAP."Distribution"]]
+heading = "Performance"
+dataframe_cols = ["Unit Y Distribution"]
+plot_type = "line"
+
+[[PAGES.REPORT_GENERATION.CATEGORY_MAP."Staffing"]]
+heading = ""
+dataframe_cols = ["Staffing Availability"]
+plot_type = 'bar'
+
+[[PAGES.REPORT_GENERATION.CATEGORY_MAP."Staffing"]]
+heading = ""
+dataframe_cols = ['Staffing Time Off']
+plot_type = 'bar'
+
+[PAGES.REPORT_GENERATION.REPORT_SCHEMA]
+
+INTRODUCTION_PROMPT = '''As a data analyst analyzing data of Company X,
+                        Write a one-line introduction of the given data, give overall totals.
+                        Do not state obvious facts like column names, data types etc.,
+                        Do not return any plot.
+                        Example: From a distribution network construction perspective, 11,909m of cable has been installed to date this financial year.
+                        '''
+
+REPORT_BODY_PROMPT = '''As a data analyst analyzing data and writing a report of Company X,
+                    Give an overall summary with some important figures.
+                    Add a second paragraph comparing statistics like average and maxima in 2-3 lines.
+                    Do not give conclusion or insights.
+                    Do not state obvious facts like column names, data types etc.,
+                    Do not return any plot.
+                    Example: Sickness rose to 4.75% in September which was mainly down to a small number of staff being
+                    signed off for longer periods within Engineering and Service Delivery.
+                    Most have now returned to work so we should see this figure drop again.
+                    '''
+
+# entries of type list will trigger the plotting function whose name appears as the only entry in the list and exists in src.report_plots
+FIGURE_1 = ["get_plot_plt"]
+
+CONCLUSION_PROMPT = '''As a data analyst analyzing data of Company X, show trends (if any) and seasonality (if any).
+                Highlight the conclusion that can be made from given data and plots.
+                Add recommendations that can be made using given data.
+                Write in 2-6 lines.
+                Do not state obvious facts like column names, data types.
+                Do not return any plot, Return analysis as a data story.
+                Example: We are still experiencing a steady increase in Service work year on year.
+                There is also increased customer work. At present, we have 50 schemes in progress with our Planning department and a further 24 at initial enquiry stage.
+                Our Construction department are currently managing 38 active schemes as well as dealing with any unplanned fault situations that arise.
+                '''
+
+[PAGES.DATA_INSIGHT]
+PATH = "src/pages/data_insight.py"
+NAME = "Data Insight"
+SIDEBAR_LABEL = "Data Insight"
+BUTTON_LABEL = "Data Insight"
+BUTTON_DESCRIPTION = "Generates Visualized Insights along with the Short Summary"
+
+TITLE_ABOVE_TEXT_BOX = "Insight Support Assistant"
+SUB_TITLE_ABOVE_TEXT_BOX1 = "I can assist you in providing insights on the data provided and questions asked on the provided data."
+SUB_TITLE_ABOVE_TEXT_BOX2 = "**Enter your question to Virtual Assistant:**"  # The subtitle above the text box
+WAITING_NOTIFICATION = "Please wait, I am generating insights based on your query."
+
+#These paramters are specific to the "temperature" and "max_tokens" arguments for OpenAIs models
+
+TEMPERATURE = 0.1  # Do no set at 0.0 or infinite loops can happen in langchain
+MAX_TOKEN = 2000
+DATA_SOURCE = "./data/data_insight"
+
+[PAGES.DOC_SEARCH]
+PATH = "src/pages/doc_search_and_summary.py"
+NAME = "Document Search & Summarization"
+SIDEBAR_LABEL = "Document Search & Summarization"
+BUTTON_LABEL = "Doc Search"
+BUTTON_DESCRIPTION = "Search for the Relevant Documents from the Database and Provide Summary of the Relevant Documents"
+
+TITLE_ABOVE_TEXT_BOX = "Sales Insight Support Assistant"  # The title above the text box
+SUB_TITLE_ABOVE_TEXT_BOX1 = "I can assist you in providing insights on, and questions about, in-house documents."  # The subtitle above the text box
+SUB_TITLE_ABOVE_TEXT_BOX2 = "**Enter your question to Virtual Assistant:**"  # The subtitle above the text box
+WAITING_NOTIFICATION = "Please Wait, I am searching for the document based on your query."  # The waiting notification message
+
+TEMPERATURE = 0.0
+MAX_TOKEN = 2000
+DATA_SOURCE = "./data/doc_search" # Resolved issue #47
+SCORE_THRESHOLD = 0.75
+
+
+[PAGES.DOC_SEARCH.INSTRUCTION_MAPPING]
+"Short (In Paragraph)" = "Provide a short summary in 2 to 3 paragraphs."
+"Long (In Paragraph)" = "provide the detailed summary of the provided above text in three to four detailed paragraphs and summary response should be in accordance with the below question"
+"Short (In Bullet Points)" = "provide the summary of the provided above text in 2 bullet points and summary response should be in accordance with the below question"
+"Long (In Bullet Points)" = "provide the summary of the provided above text in 6 bullet points and summary response should be in accordance with the below question"
+"User-Determined" = ""
+
+# NOTE: The "Name"s of these constraints must match the variables in the INSTRUCTION_MAPPING above
+[PAGES.DOC_SEARCH.CONSTRAINT_MAPPING.SHORT_PARAGRAPH]
+NAME = "Short (In Paragraph)"
+MAX_ATTEMPTS = 5
+CHAR_PARAGRAPH = "\n\n"
+MIN_PARAGRAPH = 1
+MAX_PARAGRAPH = 3
+
+[PAGES.DOC_SEARCH.CONSTRAINT_MAPPING.LONG_PARAGRAPH]
+NAME = "Long (In Paragraph)"
+MAX_ATTEMPTS = 5
+CHAR_PARAGRAPH = "\n\n"
+MIN_PARAGRAPH = 3
+MAX_PARAGRAPH = 5
+
+[PAGES.DOC_SEARCH.CONSTRAINT_MAPPING.SHORT_BULLET]
+NAME = "Short (In Bullet Points)"
+MAX_ATTEMPTS = 5
+CHAR_BULLET = "\n- "
+MIN_BULLET = 1
+MAX_BULLET = 2
+
+[PAGES.DOC_SEARCH.CONSTRAINT_MAPPING.LONG_BULLET]
+NAME = "Long (In Bullet Points)"
+MAX_ATTEMPTS = 5
+CHAR_BULLET = "\n- "
+MIN_BULLET = 2
+MAX_BULLET = 6
+
+
+[PAGES.IMG_SEARCH]
+PATH = "src/pages/image_generation.py"
+NAME = "Image Search"
+SIDEBAR_LABEL = "Image Search"
+BUTTON_LABEL = "Image Search"
+BUTTON_DESCRIPTION = "Searches images as per the user queries"
+
+TITLE_ABOVE_TEXT_BOX = "Sales Insight Support Assistant"
+SUB_TITLE_ABOVE_TEXT_BOX1 = "I can assist you in providing images and analyzing data."
+SUB_TITLE_ABOVE_TEXT_BOX2 = "Hello. How can I help you?"
+
+DATA_SOURCE = "./data/image_search"
+
+TABULAR_DATA_FOLDER = ""
+PRODUCT_DATABASE_PATH = "/nestle_total_product_list.xlsx"
+IMG_FOLDER = "/Nestle_product_images/"
+STOCK_DATABASE_PATH = "nestle_stock_images_database.xlsx"
+STOCK_IMG_FOLDER = "/Nestle_stock_images/"
+
+
+AGENT_TYPES = ["Data Insight", "Image Search"]
+
+INSTRUCTIONS = """
+    Based on the given file answer the question-
+
+    Instructions:
+
+    - Do not print df.
+    - Always Action: python_repl_ast.
+    - If Action is not python_repl_ast and consists of steps to take, then break the action down into individual actionable steps such that each Action becomes python_repl_ast.
+    - Action input should be a valid python command.
+    - Always Plot graph using matplotlib.pyplot only.
+    - Assume user does not have access to thought.
+    - If any charts or graphs or plots were created save them locally using plt.savefig("image.png") instead of plt.show()
+    - Always save the plot using the filename "plot.png"
+    Question:
+    """
+
+[PAGES.IMG_SEARCH.IMAGE_KEYWORDS.PRODUCTS]
+keywords = ["product images", "product image", "product picture", "product pictures"]
+
+[PAGES.IMG_SEARCH.IMAGE_KEYWORDS.STOCKS]
+keywords = ["stockphoto", "stock photo", "stock image", "stockimage", "stockphotos", "stock photos", "stock images", "stockimages"]
+
+[PAGES.FREEFORM]
+PATH = "src/pages/freeform_qa.py"
+NAME = "TrustworthyLLM"
+BUTTON_LABEL = "TrustworthyLLM"
+BUTTON_DESCRIPTION = "Demonstration of LLM chatbot with TrustworthyAI controls"
+
+TITLE_ABOVE_TEXT_BOX = "Trustworthy:green[LLM]"
+SUB_TITLE_ABOVE_TEXT_BOX1 = "This page demonstrates how the TrustworthyAI framework can be applied to a chat service with an LLM."
+SUB_TITLE_ABOVE_TEXT_BOX2 = "Enter your question:"
+SEARCH_BUTTON_LABEL = "Generate Search"
+SPINNER_TEXT = "I am searching for answers."
+ERROR_RESPONSE = "I am unable to generate a response to your question -- apologies for the inconvenience."
+CHECKBOX_TEXT = "Response History"
+
+[PAGES.TRUSTWORTHY_QA]
+PATH = "src/pages/trustworthy_qa.py"
+NAME = "TrustworthyLLM"
+BUTTON_LABEL = "TrustworthyLLM"
+BUTTON_DESCRIPTION = "Demonstration of LLM chatbot with TrustworthyAI controls"
+
+TITLE_ABOVE_TEXT_BOX = "Trustworthy:green[LLM]"
+SUB_TITLE_ABOVE_TEXT_BOX1 = "This page demonstrates how the TrustworthyAI framework can be applied to a chat service with an LLM."
+SUB_TITLE_ABOVE_TEXT_BOX2 = "Enter your question:"
+SEARCH_BUTTON_LABEL = "Generate Search"
+SPINNER_TEXT = "I am searching for answers."
+ERROR_RESPONSE = "I am unable to generate a response to your question -- apologies for the inconvenience."
+CHECKBOX_TEXT = "Response History"
+
+[PAGES.SUBPAGE]
+PATH = "src/pages/subpage.py"
+NAME = "Subpage"
+TITLE_ABOVE_TEXT_BOX = "Subpage Title"
+SUB_TITLE_ABOVE_TEXT_BOX1 = "Subpage subtitle"
+BUTTON_LABEL = "Subpage"
+BUTTON_DESCRIPTION = "Example subpage button."
+
+[PAGES.PLAYGROUND]
+PATH = "src/pages/llm_guard_playground.py"
+NAME = "LLM Guard Playground"
+BUTTON_LABEL = "LLM Guard Playground"
+BUTTON_DESCRIPTION = "Test LLM Guard"
+
+[PAGES.TRUST_CONTROLS]
+PATH = "src/pages/trustworthy_llm_controls.py"
+NAME = "TrustworthyLLM Controls"
+BUTTON_LABEL = "TrustworthyLLM Controls"
+BUTTON_DESCRIPTION = "TrustworthyLLM Controls"
+
+[DGX]
+LOG_OUT_DIR = "/projects/genai-demo/"
+LOG_OUT_ON = false
+
+[LOCAL]
+LOG_OUT_DIR = "logs/"
+LOG_OUT_ON = true
+

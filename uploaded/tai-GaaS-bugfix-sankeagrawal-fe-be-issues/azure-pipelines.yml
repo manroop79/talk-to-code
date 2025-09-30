@@ -1,0 +1,100 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- release/*
+
+pool: default
+
+variables:
+  - name: major
+    value: 1
+  - name: minor
+    value: $[counter(variables['major'], 1)]
+
+stages:
+- stage: Build_and_Push_API_Image
+  displayName: Build and Push API Image
+  pool: default
+  jobs:
+  - job: Build_API_Image
+    displayName: Build API Image
+    steps:
+    - script: |
+              cd API
+              aws ecr get-login-password --region us-east-1 | sudo docker login --username AWS --password-stdin 225665832482.dkr.ecr.us-east-1.amazonaws.com
+              sudo docker build -t tai/api -f docker/application_image/Dockerfile .
+              sudo docker tag tai/api:latest 225665832482.dkr.ecr.us-east-1.amazonaws.com/fema/trustworthy:"api-$(major).$(minor)"
+              sudo docker push 225665832482.dkr.ecr.us-east-1.amazonaws.com/fema/trustworthy:"api-$(major).$(minor)"
+              echo "New API Image Tag is: api-$(major).$(minor)"
+
+- stage: Build_and_Push_Frontend_Image
+  displayName: Build and Push Frontend Image
+  pool: default
+  jobs:
+  - job: Build_Frontend_Image
+    displayName: Build Frontend Image
+    steps:
+    - script: |
+              cd frontend
+              aws ecr get-login-password --region us-east-1 | sudo docker login --username AWS --password-stdin 225665832482.dkr.ecr.us-east-1.amazonaws.com
+              sudo docker build -t tai/frontend -f docker/Dockerfile .
+              sudo docker tag tai/frontend:latest 225665832482.dkr.ecr.us-east-1.amazonaws.com/fema/trustworthy:"frontend-$(major).$(minor)"
+              sudo docker push 225665832482.dkr.ecr.us-east-1.amazonaws.com/fema/trustworthy:"frontend-$(major).$(minor)"
+              echo "New Frontend Image Tag is: frontend-$(major).$(minor)"
+
+- stage: Build_and_Push_Legacy_Demo_Image
+  displayName: Build and Push Legacy Demo Image
+  pool: default
+  jobs:
+  - job: Build_Legacy_Demo_Image
+    displayName: Build Legacy Demo Image
+    steps:
+    - script: |
+              cd Legacy_Demo
+              aws ecr get-login-password --region us-east-1 | sudo docker login --username AWS --password-stdin 225665832482.dkr.ecr.us-east-1.amazonaws.com
+              sudo docker build -t fema/trustworthy -f docker/application_image/Dockerfile .
+              sudo docker tag fema/trustworthy:latest 225665832482.dkr.ecr.us-east-1.amazonaws.com/fema/trustworthy:"app-$(major).$(minor)"
+              sudo docker push 225665832482.dkr.ecr.us-east-1.amazonaws.com/fema/trustworthy:"app-$(major).$(minor)"
+              echo "New Image Tag is: app-$(major).$(minor)"
+
+- stage: Build_and_Push_FEMA_Demo_Image
+  displayName: Build and Push FEMA Demo Image
+  pool: default
+  jobs:
+  - job: Build_FEMA_Demo_Image
+    displayName: Build FEMA Demo Image
+    steps:
+    - script: |
+              cd FEMA_Demo
+              aws ecr get-login-password --region us-east-1 | sudo docker login --username AWS --password-stdin 225665832482.dkr.ecr.us-east-1.amazonaws.com
+              sudo docker build -t fema/demo -f docker/application_image/Dockerfile .
+              sudo docker tag fema/demo:latest 225665832482.dkr.ecr.us-east-1.amazonaws.com/fema/trustworthy:"fema-app-$(major).$(minor)"
+              sudo docker push 225665832482.dkr.ecr.us-east-1.amazonaws.com/fema/trustworthy:"fema-app-$(major).$(minor)"
+              echo "New Image Tag is: fema-app-$(major).$(minor)"              
+
+- stage: Push_Artifacts
+  displayName: Push Artifacts
+  pool: default
+  jobs:
+  - job: Push_Artifacts
+    displayName: Push Artifacts
+    steps:
+    - task: CopyFiles@1
+      inputs:
+        SourceFolder: '$(Build.SourcesDirectory)'
+        Contents: |
+          API/infra/deployment.yaml
+          Legacy_Demo/infra/deployment.yaml
+          frontend/infra/deployment.yaml
+          FEMA_Demo/infra/deployment.yaml
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+      # Publish the artifacts. Later to be replaced by Git push.
+    - task: PublishBuildArtifacts@1
+      inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'tai-gps'
+          publishLocation: 'Container'

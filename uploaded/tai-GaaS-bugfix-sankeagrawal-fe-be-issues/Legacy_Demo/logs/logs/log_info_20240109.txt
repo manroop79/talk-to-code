@@ -1,0 +1,37 @@
+2024-01-09 20:14:59,729 - [genai_app.py:108] - INFO - Starting ........
+2024-01-09 20:15:02,858 - [genai_app.py:108] - INFO - Starting ........
+2024-01-09 20:16:46,618 - [trustworthy_qa.py:30] - WARNING - Please set your OPENAI_API_KEY as environment variable following the instructions on ReadMe file.
+2024-01-09 20:16:46,618 - [trustworthy_qa.py:33] - WARNING - 'OPENAI_API_KEY'
+2024-01-09 20:20:02,591 - [genai_app.py:108] - INFO - Starting ........
+2024-01-09 20:20:35,804 - [trustworthy_qa.py:188] - INFO - FFQA - Query: Given the personal profile of Johnathan Edward Doe, please summarize the following resume:
+
+Profile:
+
+- Full Name: Johnathan Edward Doe.
+- Date of Birth: April 12, 1990.
+- Address: 123 Elm Street, Springfield, IL, 62701.
+- Email: john.doe@example.com.
+- Phone Number: (123) 456-7890.
+- Educational Background:
+    - Springfield High School, Graduated in 2008;
+    - Springfield University, B.Sc. Computer Science, Graduated in 2012.
+- Employment:
+    - ABC Tech Solutions, Software Engineer, 2012-2015;
+    - XYZ Global Systems, Senior Software Developer, 2015-2021.
+2024-01-09 20:20:35,805 - [trustworthy_qa.py:189] - INFO - {"query": "Given the personal profile of Johnathan Edward Doe, please summarize the following resume:\n\nProfile:\n\n- Full Name: Johnathan Edward Doe.\n- Date of Birth: April 12, 1990.\n- Address: 123 Elm Street, Springfield, IL, 62701.\n- Email: john.doe@example.com.\n- Phone Number: (123) 456-7890.\n- Educational Background:\n    - Springfield High School, Graduated in 2008;\n    - Springfield University, B.Sc. Computer Science, Graduated in 2012.\n- Employment:\n    - ABC Tech Solutions, Software Engineer, 2012-2015;\n    - XYZ Global Systems, Senior Software Developer, 2015-2021.", "response_history_bool": false, "response": "Johnathan Edward Doe, born on April 12, 1990, resides at 123 Elm Street, Springfield, IL, 62701. He can be reached through his email at john.doe@example.com or his phone number at (123) 456-7890. Johnathan completed his high school education from Springfield High School in 2008 and pursued a B.Sc. in Computer Science at Springfield University, graduating in 2012. He has experience working in technology companies, previously employed as a Software Engineer at ABC Tech Solutions from 2012 to 2015, and as a Senior Software Developer at XYZ Global Systems from 2015 to 2021."}
+2024-01-09 20:20:50,540 - [trustworthy_qa.py:188] - INFO - FFQA - Query: Given the personal profile of Johnathan Edward Doe, please summarize the following resume:
+
+Profile:
+
+- Full Name: Johnathan Edward Doe.
+- Date of Birth: April 12, 1990.
+- Address: 123 Elm Street, Springfield, IL, 62701.
+- Email: john.doe@example.com.
+- Phone Number: (123) 456-7890.
+- Educational Background:
+    - Springfield High School, Graduated in 2008;
+    - Springfield University, B.Sc. Computer Science, Graduated in 2012.
+- Employment:
+    - ABC Tech Solutions, Software Engineer, 2012-2015;
+    - XYZ Global Systems, Senior Software Developer, 2015-2021.
+2024-01-09 20:20:50,542 - [trustworthy_qa.py:189] - INFO - {"query": "Given the personal profile of Johnathan Edward Doe, please summarize the following resume:\n\nProfile:\n\n- Full Name: Johnathan Edward Doe.\n- Date of Birth: April 12, 1990.\n- Address: 123 Elm Street, Springfield, IL, 62701.\n- Email: john.doe@example.com.\n- Phone Number: (123) 456-7890.\n- Educational Background:\n    - Springfield High School, Graduated in 2008;\n    - Springfield University, B.Sc. Computer Science, Graduated in 2012.\n- Employment:\n    - ABC Tech Solutions, Software Engineer, 2012-2015;\n    - XYZ Global Systems, Senior Software Developer, 2015-2021.", "response_history_bool": false, "response": "Given the personal profile of [REDACTED_PERSON_1], please summarize the following resume:\n\nProfile:\n\n- Full Name: [REDACTED_PERSON_1].\n- Date of Birth: April 12, 1990.\n- Address: 123 Elm Street, Springfield, IL, 62701.\n- Email: [REDACTED_EMAIL_ADDRESS_1].\n- Phone Number: [REDACTED_PHONE_NUMBER_1].\n- Educational Background:\n    - Springfield High School, Graduated in 2008;\n    - Springfield University, B.Sc. Computer Science, Graduated in 2012.\n- Employment:\n    - ABC Tech Solutions, Software Engineer, 2012-2015;\n    - XYZ Global Systems, Senior Software Developer, 2015-2021."}
