@@ -38,8 +38,11 @@ EchoCode extracts and embeds your files, stores embeddings as vectors in Supabas
 ## Screenshots
 
 ![Landing](./public/tc-1.png)
+
 ![Landing](./public/tc-2.png)
+
 ![Workspace](./public/tc-3.png)
+
 ![Chat-Panel](./public/tc-4.png)
 
 ---
