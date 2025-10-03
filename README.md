@@ -39,9 +39,10 @@ EchoCode extracts and embeds your files, stores embeddings as vectors in Supabas
 
 > Replace these with your own project images in `public/readme/`.
 
-![Landing](./public/readme/landing.png)
-![Workspace](./public/readme/workspace.png)
-![Features + Pricing](./public/readme/features-pricing.png)
+![Landing](./public/readme/tc-1.png)
+![Landing](./public/readme/tc-2.png)
+![Workspace](./public/readme/tc-3.png)
+![Chat-Panel](./public/readme/tc-4.png)
 
 ---
 
