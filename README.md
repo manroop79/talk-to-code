@@ -120,7 +120,7 @@ pnpm install
 ## Core Flows
 
 ### 1) Upload → Embed
-- User uploads a ZIP in Workspace
+- User uploads a ZIP file in Workspace
 - `/api/upload` unzips contents
 - `/api/embed` walks files, chunks text, generates embeddings, upserts into Supabase
 
