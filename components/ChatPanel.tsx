@@ -118,6 +118,20 @@ title={s.filename}
 </div>
 ))
 )}
+
+{/* Loading indicator */}
+{sending && (
+<div className="flex justify-start">
+<div className="rounded-2xl px-4 py-3 bg-white/5 border border-white/10 backdrop-blur">
+<div className="flex space-x-1.5">
+<div className="h-2.5 w-2.5 animate-bounce rounded-full bg-white/70" style={{ animationDelay: "0ms" }} />
+<div className="h-2.5 w-2.5 animate-bounce rounded-full bg-white/70" style={{ animationDelay: "150ms" }} />
+<div className="h-2.5 w-2.5 animate-bounce rounded-full bg-white/70" style={{ animationDelay: "300ms" }} />
+</div>
+</div>
+</div>
+)}
+
 <div ref={endRef} />
 </div>
 

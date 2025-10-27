@@ -55,8 +55,17 @@ const inputRef = useRef<HTMLInputElement>(null);
 useEffect(() => {
 try {
 const id = localStorage.getItem("ttc_project_id");
-if (id) setProjectId(id);
-setHistory(loadHistory());
+const historyData = loadHistory();
+setHistory(historyData);
+if (id) {
+setProjectId(id);
+// Find the ZIP name from history
+const historyItem = historyData.find((h) => h.projectId === id);
+if (historyItem) {
+setZipName(historyItem.zipName);
+setEmbedSummary(historyItem.summary || null);
+}
+}
 } catch {}
 }, []);
 
@@ -154,9 +163,11 @@ const f = e.dataTransfer.files?.[0];
 if (f) handleFiles(f);
 }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-const setActiveProject = (pid: string) => {
+const setActiveProject = (pid: string, zipFileName: string) => {
     localStorage.setItem("ttc_project_id", pid);
     setProjectId(pid);
+    setZipName(zipFileName);
+    setEmbedSummary(null);
 };
 
 const removeItem = (pid: string) => {
@@ -260,7 +271,7 @@ ID: {short(h.projectId)} • {niceDate(h.at)}
 
 <button
 className="rounded-md px-2 py-1 text-[11px] bg-white text-black transition hover:brightness-95 cursor-pointer"
-onClick={() => setActiveProject(h.projectId)}
+onClick={() => setActiveProject(h.projectId, h.zipName)}
 >
   Use
 </button>
