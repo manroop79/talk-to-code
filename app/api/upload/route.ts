@@ -16,11 +16,22 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "No file provided. Use form field 'file'." }, { status: 400 });
         }
 
-    // 1) Make a new local projectId (don’t depend on DB here)
+        // Check file size limit (Vercel has 4.5MB body size limit on Hobby plan)
+        const maxSize = 50 * 1024 * 1024; // 50MB for local, but Vercel may have lower limits
+        if (file.size > maxSize) {
+            return NextResponse.json({ 
+                error: `File too large. Maximum size is ${maxSize / 1024 / 1024}MB` 
+            }, { status: 413 });
+        }
+
+    // 1) Make a new local projectId (don't depend on DB here)
     const projectId = crypto.randomUUID();
 
-    // 2) Ensure target folder
-    const root = path.join(process.cwd(), "uploaded", projectId);
+    // 2) Ensure target folder - use /tmp for Vercel compatibility
+    // On Vercel, only /tmp is writable (ephemeral storage)
+    const isVercel = process.env.VERCEL === "1";
+    const uploadBase = isVercel ? "/tmp" : path.join(process.cwd(), "uploaded");
+    const root = path.join(uploadBase, projectId);
     await mkdir(root, { recursive: true });
 
     // 3) Save the uploaded zip

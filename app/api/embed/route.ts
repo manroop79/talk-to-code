@@ -51,7 +51,10 @@ export async function POST(req: NextRequest) {
     }
 
     // 2) Walk extracted files under uploaded/<projectId> and embed allowed ones
-    const base = path.join(process.cwd(), "uploaded", projectId);
+    // Use /tmp on Vercel, uploaded/ locally
+    const isVercel = process.env.VERCEL === "1";
+    const uploadBase = isVercel ? "/tmp" : path.join(process.cwd(), "uploaded");
+    const base = path.join(uploadBase, projectId);
     const allFiles = await getFilesRecursively(base);
     const files = allFiles.filter(shouldIndex);
 

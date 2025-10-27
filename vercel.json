@@ -1,0 +1,17 @@
+{
+  "functions": {
+    "app/api/upload/route.ts": {
+      "maxDuration": 60,
+      "memory": 1024
+    },
+    "app/api/embed/route.ts": {
+      "maxDuration": 300,
+      "memory": 1024
+    },
+    "app/api/ask/route.ts": {
+      "maxDuration": 60,
+      "memory": 512
+    }
+  }
+}
+
