@@ -49,7 +49,82 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Invalid ZIP or extract failed." }, { status: 400 });
     }
 
-    // 5) Return projectId for the client to use
+    // 5) On Vercel, immediately process the files since /tmp is ephemeral
+    // Files won't persist across function invocations
+    if (isVercel) {
+        try {
+            // Import and call embedding logic directly
+            const { promises: fs } = await import("node:fs");
+            const { getFilesRecursively } = await import("@/lib/server/getFilesRecursively");
+            const { embedFileToProject, supabase } = await import("@/lib/supabase");
+            
+            const ALLOWED = [
+                ".js",".ts",".jsx",".tsx",".json",".md",".mdx",".yml",".yaml",".toml",
+                ".py",".rs",".go",".java",".kt",".rb",".php",".sh",".css",".scss",".html",
+                ".c",".h",".cpp"
+            ];
+            
+            function shouldIndex(file: string) {
+                const ext = path.extname(file).toLowerCase();
+                return ALLOWED.includes(ext);
+            }
+            
+            // Ensure project exists in DB
+            const { data: existing, error: selErr } = await supabase
+                .from("projects")
+                .select("id")
+                .eq("id", projectId)
+                .maybeSingle();
+
+            if (selErr) {
+                console.error("Supabase select(projects) error:", selErr);
+                return NextResponse.json({ error: `DB read failed: ${selErr.message}` }, { status: 500 });
+            }
+
+            if (!existing) {
+                const { error: insErr } = await supabase
+                    .from("projects")
+                    .insert({ id: projectId, name: `Project ${new Date().toISOString()}` });
+
+                if (insErr && insErr.code !== "23505") {
+                    console.error("Supabase insert(projects) error:", insErr);
+                    return NextResponse.json({ error: `DB insert failed: ${insErr.message}` }, { status: 500 });
+                }
+            }
+            
+            // Process files
+            const allFiles = await getFilesRecursively(root);
+            const files = allFiles.filter(shouldIndex);
+            
+            let inserted = 0;
+            let skipped = 0;
+            
+            for (const file of files) {
+                const content = await fs.readFile(file, "utf-8");
+                const filename = path.basename(file);
+                const res = await embedFileToProject(projectId, file, filename, content);
+                inserted += res.inserted;
+                skipped += res.skipped;
+            }
+            
+            return NextResponse.json({ 
+                projectId, 
+                folder: root,
+                embedded: true,
+                files: files.length,
+                inserted,
+                skipped
+            });
+        } catch (embedError: unknown) {
+            console.error("Embedding error on Vercel:", embedError);
+            return NextResponse.json({ 
+                error: "Upload succeeded but embedding failed: " + (embedError instanceof Error ? embedError.message : "Unknown error"),
+                projectId 
+            }, { status: 500 });
+        }
+    }
+
+    // 6) For local development, return projectId for separate embed call
     return NextResponse.json({ projectId, folder: root });
     } catch (e: unknown) {
         console.error("/api/upload error:", e);

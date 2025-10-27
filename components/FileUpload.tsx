@@ -117,15 +117,35 @@ const form = new FormData();
 form.append("file", file);
 
 const up = await fetch("/api/upload", { method: "POST", body: form });
-const upData = (await up.json()) as { projectId?: string; error?: string };
+const upData = (await up.json()) as { 
+  projectId?: string; 
+  error?: string; 
+  embedded?: boolean; 
+  files?: number; 
+  inserted?: number; 
+  skipped?: number;
+};
 if (!up.ok || !upData.projectId) throw new Error(upData.error || "Upload failed");
 
 // 2) Persist project id
 localStorage.setItem("ttc_project_id", upData.projectId);
 setProjectId(upData.projectId);
 
-// 3) Embed
-const summary = await startEmbed(upData.projectId);
+// 3) Embed (if not already done on server)
+let summary: EmbedResult;
+if (upData.embedded) {
+  // Vercel already embedded during upload
+  summary = {
+    message: "Embedding complete",
+    files: upData.files || 0,
+    inserted: upData.inserted || 0,
+    skipped: upData.skipped || 0,
+  };
+  setEmbedSummary(summary);
+} else {
+  // Local development - separate embed call
+  summary = await startEmbed(upData.projectId);
+}
 
 // 4) History
 storeHistory({
