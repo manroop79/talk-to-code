@@ -6,6 +6,7 @@ import { getFilesRecursively } from "@/lib/server/getFilesRecursively";
 import { embedFileToProject, supabase } from "@/lib/supabase";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 const ALLOWED = [
     ".js",".ts",".jsx",".tsx",".json",".md",".mdx",".yml",".yaml",".toml",

@@ -6,6 +6,7 @@ import crypto from "node:crypto";
 import AdmZip from "adm-zip";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
     try {

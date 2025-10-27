@@ -1,12 +1,20 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
-export async function GET() {
-    const { data, error } = await supabase.from("documents").select("*").limit(1);
-    if (error) {
-        console.error("Test fetch error:", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
-    return NextResponse.json({ data });
+export async function GET() {
+    try {
+        const { data, error } = await supabase.from("documents").select("*").limit(1);
+        if (error) {
+            console.error("Test fetch error:", error);
+            return NextResponse.json({ error: error.message }, { status: 500 });
+        }
+
+        return NextResponse.json({ data });
+    } catch (err) {
+        console.error("Test route error:", err);
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    }
 }

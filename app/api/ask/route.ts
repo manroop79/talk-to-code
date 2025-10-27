@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { searchRelevantChunks, openai } from "@/lib/supabase";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 const CHAT_MODEL = process.env.OPENAI_CHAT_MODEL || "gpt-3.5-turbo";
 
